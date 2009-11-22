@@ -16,4 +16,9 @@ $db['default']['goo_table_prefix'] = 'og_';
  * - OG Contact #2 is BI Client #1000002,
  */
 $db['default']['goo_b2c_contact_diff'] = 1000000;
+
+/* Updates on OpenGoo database can be disabled by setting goo_db_update to
+ * false.
+ */
+$db['default']['goo_db_update'] = true;
 ?>

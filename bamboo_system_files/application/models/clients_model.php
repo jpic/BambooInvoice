@@ -226,6 +226,10 @@ class clients_model extends Model {
 
 	function updateClient($client_id, $clientInfo)
 	{
+        if ( !$this->db->goo_db_update ) {
+            return false;
+        }
+
         $id = $client_id;
 
         if ( $id > $this->db->goo_b2c_contact_diff ) {
