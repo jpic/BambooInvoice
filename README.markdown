@@ -10,9 +10,30 @@ clients in BI.
 
 ## Demo
 
-| Application | Url | Username | Password |
-| OpenGoo, vanilla | http://goo.ocpsys.com/ | jpic | demo |
-| BambooInvoice, patched | http://boo.ocpsys.com/ | demo@example.com | demo |
+<table>
+    <thead>
+        <tr>
+            <th>Application</th>
+            <th>Url</th>
+            <th>Username</th>
+            <th>Password</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>OpenGoo, vanilla</td>
+            <td>http://goo.ocpsys.com</td>
+            <td>jpic</td>
+            <td>demo</td>
+        </tr>
+        <tr>
+            <td>BambooInvoice, patched</td>
+            <td>http://boo.ocpsys.com</td>
+            <td>demo@example.com</td>
+            <td>demo</td>
+        </tr>
+    </tbody>
+</table>
 
 # Setup
 
