@@ -3,12 +3,18 @@
 The purpose of this branch is to experiment bridging of BambooInvoice on OpenGoo,
 by making the first use the database tables of the latter.
 
+This is experimental is coded for free. It is not extensively tested due to
+time constraints. You **ought** to try the demo before deciding to install
+this.
+
 ## B2C Branch
 
 The concept of the B2C branch is that both OG companies and OG contacts are
 clients in BI.
 
 ## Demo
+
+You **must** try the demo first, and make sure that everything work as expected.
 
 <table>
     <thead>
@@ -36,6 +42,9 @@ clients in BI.
 </table>
 
 # Setup
+
+You **must** do full database and files backup before installing experimental
+patches.
 
 ## Database upgrade
 
