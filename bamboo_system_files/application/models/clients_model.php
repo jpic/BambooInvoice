@@ -30,17 +30,13 @@
  * @license Apache
  */
 class clients_model extends Model {
-
-    const GOO_DB_PREFIX="og_";
-    const GOO_CONTACT_DIFF=1000000;
-
     function countAllClients()
 	{
         $sql = 'select sum( number) as total_clients 
             from ( 
-                select count( id) as number from '.self::GOO_DB_PREFIX.'contacts 
+                select count( id) as number from '.$this->db->goo_table_prefix.'contacts 
                 union ( 
-                    select count( id) as number from '.self::GOO_DB_PREFIX.'companies
+                    select count( id) as number from '.$this->db->goo_table_prefix.'companies
                 )
             ) tmp';
         return $this->db->query( $sql )->row( 'total_clients' );
@@ -73,16 +69,16 @@ class clients_model extends Model {
                 ogc.notes as client_notes, 
                 ogts.value as tax_status, 
                 ogtc.value as tax_code 
-            from '. self::GOO_DB_PREFIX .'companies as ogc
+            from '. $this->db->goo_table_prefix .'companies as ogc
             left join ( 
                     select *
-                    from '. self::GOO_DB_PREFIX .'object_properties
+                    from '. $this->db->goo_table_prefix .'object_properties
                     where name="tax_status" and 
                         rel_object_manager = "Companies"
                 ) ogts on ogts.rel_object_id = ogc.id
             left join ( 
                     select * 
-                    from '. self::GOO_DB_PREFIX .'object_properties 
+                    from '. $this->db->goo_table_prefix .'object_properties 
                     where name="tax_code" and 
                         rel_object_manager = "Companies"
                 ) ogtc on ogtc.rel_object_id = ogc.id
@@ -104,24 +100,23 @@ class clients_model extends Model {
                     ogct.notes as client_notes,
                     ogts.value as tax_status,
                     ogtc.value as tax_code
-                from '. self::GOO_DB_PREFIX .'contacts ogct
+                from '. $this->db->goo_table_prefix .'contacts ogct
                 left join ( 
                         select * 
-                        from '. self::GOO_DB_PREFIX .'object_properties 
+                        from '. $this->db->goo_table_prefix .'object_properties 
                         where name="tax_status" and
                             rel_object_manager = "Contacts"
                     ) ogts on ogts.rel_object_id = ogct.id
                 left join ( 
                         select * 
-                        from '. self::GOO_DB_PREFIX .'object_properties 
+                        from '. $this->db->goo_table_prefix .'object_properties 
                         where name="tax_code" and 
                             rel_object_manager = "Contacts"
                     ) ogtc on ogtc.rel_object_id = ogct.id
                 )
         ' );
 
-        // Originnal code
-		$this->db->orderby('name', 'asc');
+        $this->db->orderby('name', 'asc');
 		return $this->db->get('clients');
 	}
 
@@ -136,8 +131,8 @@ class clients_model extends Model {
             $id = intval( $id );
         }
 
-        if ( $id > self::GOO_CONTACT_DIFF ) {
-            $id -= self::GOO_CONTACT_DIFF;
+        if ( $id > $this->db->goo_b2c_contact_diff ) {
+            $id -= $this->db->goo_b2c_contact_diff;
             $select = '
                 select
                     ogc.id + 1000000 as id,
@@ -156,16 +151,16 @@ class clients_model extends Model {
                     ogc.notes as client_notes,
                     ogts.value as tax_status,
                     ogtc.value as tax_code
-                from '. self::GOO_DB_PREFIX .'contacts ogc
+                from '. $this->db->goo_table_prefix .'contacts ogc
                 left join ( 
                         select * 
-                        from '. self::GOO_DB_PREFIX .'object_properties 
+                        from '. $this->db->goo_table_prefix .'object_properties 
                         where name="tax_status" and 
                             rel_object_manager = "Contacts"
                     ) ogts on ogts.rel_object_id = ogc.id
                 left join ( 
                         select * 
-                        from '. self::GOO_DB_PREFIX .'object_properties 
+                        from '. $this->db->goo_table_prefix .'object_properties 
                         where name="tax_code" and 
                             rel_object_manager = "Contacts"
                     ) ogtc on ogtc.rel_object_id = ogc.id
@@ -185,16 +180,16 @@ class clients_model extends Model {
                 ogc.notes as client_notes, 
                 ogts.value as tax_status, 
                 ogtc.value as tax_code 
-            from '. self::GOO_DB_PREFIX .'companies as ogc
+            from '. $this->db->goo_table_prefix .'companies as ogc
             left join ( 
                     select * 
-                    from '. self::GOO_DB_PREFIX .'object_properties 
+                    from '. $this->db->goo_table_prefix .'object_properties 
                     where name="tax_status" and 
                         rel_object_manager = "Companies"
                 ) ogts on ogts.rel_object_id = ogc.id
             left join ( 
                     select * 
-                    from '. self::GOO_DB_PREFIX .'object_properties 
+                    from '. $this->db->goo_table_prefix .'object_properties 
                     where name="tax_code" and 
                         rel_object_manager = "Companies"
                 ) ogtc on ogtc.rel_object_id = ogc.id
@@ -233,8 +228,8 @@ class clients_model extends Model {
 	{
         $id = $client_id;
 
-        if ( $id > self::GOO_CONTACT_DIFF ) {
-            $id -= self::GOO_CONTACT_DIFF;
+        if ( $id > $this->db->goo_b2c_contact_diff ) {
+            $id -= $this->db->goo_b2c_contact_diff;
             $manager = 'Contacts';
 
             $update = array(
@@ -261,7 +256,7 @@ class clients_model extends Model {
             $table = 'companies';
         }
 
-        $sql = ' update ' . self::GOO_DB_PREFIX . $table . ' set ';
+        $sql = ' update ' . $this->db->goo_table_prefix . $table . ' set ';
         $updateSql = array();
         foreach( $update as $col => $val ) {
             $updateSql[] = sprintf( '%s="%s"', $col, $val );
@@ -272,7 +267,7 @@ class clients_model extends Model {
         $this->db->query( $sql );
 
 
-        $baseSql = 'insert into '. self::GOO_DB_PREFIX . 'object_properties 
+        $baseSql = 'insert into '. $this->db->goo_table_prefix . 'object_properties 
             (rel_object_id, rel_object_manager, name, value)
             values( ' . $id . ', "' . $manager . '", "%s", "%s")
             on duplicate key update value=values(value)';
